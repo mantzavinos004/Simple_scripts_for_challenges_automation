@@ -1,0 +1,34 @@
+which ls ps netstat find
+ls -l $(which ls) $(which ps)
+
+and got:
+
+/usr/bin/ls
+/usr/bin/ps
+/usr/bin/find
+-rwxr-xr-x 1 root root 142312 Apr  5  2024 /usr/bin/ls
+-rwxr-xr-x 1 root root 146424 Mar 31  2024 /usr/bin/ps
+
+you confirmed that the ls and ps binaries are in /usr/bin, and their permissions look normal. However, this doesn’t guarantee they’re clean—they could still be trojanized or hooked at runtime.
+
+This is the most common rootkit method to force malicious .so libraries into every process:
+
+bash
+Αντιγραφή
+Επεξεργασία
+cat /etc/ld.so.preload
+
+and got:
+/lib/x86_64-linux-gnu/libc.hook.so.6
+
+We found /lib/x86_64-linux-gnu/libc.hook.so.6 in the /lib directory, which looks suspicious there.
+
+Then , we just try to remove it through moving that file into /tmp:
+
+mv /lib/x86_64-linux-gnu/libc.hook.so.6 /tmp
+
+then trying ls again
+and you get an ERROR: ld.so: object ‘/lib/x86_64-linux-gnu/libc.hook.so.6’ from /etc/ld.so.preload cannot be preloaded mean that we finally able to remove that kit .
+so you ready to fin what ever you want:
+
+find / -name flag.txt 2>/dev/null
